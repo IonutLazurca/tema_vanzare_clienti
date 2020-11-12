@@ -33,11 +33,8 @@ namespace date.API
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "Nu am putut incarca baza de date");   
                 }
-
             }
             host.Run();
-
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

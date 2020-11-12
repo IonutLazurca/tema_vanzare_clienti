@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using date.API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace date.API.Data
 {
@@ -33,21 +35,19 @@ namespace date.API.Data
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<ClientOrder>> GetTotalOrders()
+        public async Task<int> GetTotalOrders()
         {
-            var result = await _context.ClientOrders.Include(o => o.Order).ToListAsync();
+            int totalSales = 0;            
 
-            var cities = new List<string>();
-            foreach (var city in result)
+            var result = (from co in _context.ClientOrders
+                            join o in _context.Orders on co.OrderId equals o.OrderId
+                            select o.Value);
+            foreach (var item in result)
             {
-                if (!cities.Contains(city.Client.City.ToString()))
-                {
-                    cities.Add(city.ToString());
-                    System.Console.WriteLine(city);
-                }
+                totalSales = item + totalSales;
             }
-            
-            return result;
+            return totalSales;
         }
+
     }
 }

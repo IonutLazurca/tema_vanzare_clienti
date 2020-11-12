@@ -16,10 +16,10 @@ namespace date.API.Controllers
             
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetOrdersByCity ([FromQuery]string name)
+        [HttpGet("{id}", Name = "GetCitySale")]
+        public async Task<IActionResult> GetOrdersByCity ([FromQuery] string id)
         {
-            var result = await _repo.GetOrdersByCity(name);
+            var result = await _repo.GetOrdersByCity(id);
 
             return Ok(result);
         }

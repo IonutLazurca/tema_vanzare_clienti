@@ -6,6 +6,5 @@ namespace date.API.Models
         public Order Order { get; set; }
         public int ClientId { get; set; }
         public Client Client { get; set; }
-
     }
 }
