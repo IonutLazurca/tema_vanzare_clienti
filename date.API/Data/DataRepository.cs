@@ -5,6 +5,7 @@ using date.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using date.API.Dtos;
 
 namespace date.API.Data
 {
@@ -50,15 +51,33 @@ namespace date.API.Data
             return totalSales;
         }
 
-        public async Task<int> GetTotalOrdersByCity()
-        {                    
+        public async Task<List<CityTotalDto>> GetTotalOrdersByCity()
+        {   
+            var cities = new List<string>();
             var result = await _context.ClientOrders.Include(o => o.Order).Include(c => c.Client).ToListAsync();
             foreach (var item in result)
             {
-                System.Console.WriteLine(item.Client.City);   
+                if (!cities.Contains(item.Client.City))
+                {
+                    cities.Add(item.Client.City);
+                };           
             }
 
-            return 1;
+            var totals = new List<CityTotalDto>();
+            
+            foreach (var city in cities)
+            {
+                int totalSales = 0;
+                foreach (var res in result)
+                {
+                    if (res.Client.City == city)
+                    {                        
+                        totalSales = totalSales + res.Order.Value;
+                    }                    
+                }
+                totals.Add(new CityTotalDto {Name = city, TotalSales = totalSales});
+            }
+             return totals;
         }
 
     }
