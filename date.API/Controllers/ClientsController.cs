@@ -12,8 +12,7 @@ namespace date.API.Controllers
 
         public ClientsController(IDataRepository repo)
         {
-            _repo = repo;
-            
+            _repo = repo;            
         }
 
         [HttpGet("city/{id}")]
@@ -36,6 +35,14 @@ namespace date.API.Controllers
         public async Task<IActionResult> GetTotalOrdersByCity ()
         {
             var result = await _repo.GetTotalOrdersByCity();
+
+            return Ok(result);
+        }
+
+        [HttpGet("filterCustomer")]
+        public async Task<IActionResult> GetSpecificCustomer ([FromQuery] int salesCount, int salesValue)
+        {
+            var result = await _repo.GetSpecificSale(salesCount, salesValue);
 
             return Ok(result);
         }

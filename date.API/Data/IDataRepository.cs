@@ -10,6 +10,6 @@ namespace date.API.Data
          Task<int> GetTotalOrders();        
          Task<int> GetOrdersByCity(string name);
          Task<List<CityTotalDto>> GetTotalOrdersByCity();
-         Task<Order> GetSpecificSale(int count, int saleValue);
+         Task<CustomerSpecSales> GetSpecificSale(int count, int saleValue);
     }
 }

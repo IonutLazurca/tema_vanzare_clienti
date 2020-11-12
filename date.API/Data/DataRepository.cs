@@ -31,9 +31,38 @@ namespace date.API.Data
             return  citySales;
         }
 
-        public Task<Order> GetSpecificSale(int count, int saleValue)
+        public async Task<CustomerSpecSales> GetSpecificSale(int salesCount, int salesValue)
         {
-            throw new System.NotImplementedException();
+            var customers = new List<string>();
+            var result = await _context.ClientOrders.Include(o => o.Order).Include(c => c.Client).ToListAsync();
+            foreach (var item in result)
+            {
+                if (!customers.Contains(item.Client.Name))
+                {
+                    customers.Add(item.Client.Name);
+                };           
+            }
+
+            var totals = new List<CustomerSpecSales>();
+            
+            foreach (var customer in customers)
+            {
+                int totalSales = 0;
+                int count = 0;
+                foreach (var res in result)
+                {
+                    if (res.Client.Name == customer)
+                    {                        
+                        totalSales = totalSales + res.Order.Value;
+                        count++;
+                    }                    
+                }
+                totals.Add(new CustomerSpecSales {Name = customer, TotalSales = totalSales, SalesCount = count});
+            }
+
+            var customerIndex = totals.FindIndex(x => x.SalesCount >= salesCount && x.TotalSales >= salesValue);
+
+            return totals[customerIndex];
         }
 
         public async Task<int> GetTotalOrders()
@@ -79,6 +108,5 @@ namespace date.API.Data
             }
              return totals;
         }
-
     }
 }
