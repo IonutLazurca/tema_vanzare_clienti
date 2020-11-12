@@ -24,10 +24,10 @@ namespace date.API.Data
             foreach (var item in result)
             {
                 citySales = citySales + item.Order.Value;
-                System.Console.WriteLine(citySales);
             }
-            return  citySales;
+            System.Console.WriteLine(citySales);
 
+            return  citySales;
         }
 
         public Task<Order> GetSpecificSale(int count, int saleValue)
@@ -46,7 +46,19 @@ namespace date.API.Data
             {
                 totalSales = item + totalSales;
             }
+            System.Console.WriteLine(totalSales);
             return totalSales;
+        }
+
+        public async Task<int> GetTotalOrdersByCity()
+        {                    
+            var result = await _context.ClientOrders.Include(o => o.Order).Include(c => c.Client).ToListAsync();
+            foreach (var item in result)
+            {
+                System.Console.WriteLine(item.Client.City);   
+            }
+
+            return 1;
         }
 
     }
